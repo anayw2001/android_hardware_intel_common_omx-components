@@ -22,12 +22,12 @@ LOCAL_SHARED_LIBRARIES := \
 
 LOCAL_HEADER_LIBRARIES := \
     intel_libva_headers \
+    khronos_openmax_headers \
     libnativebase_headers \
     libstagefright_foundation_headers
 
 LOCAL_C_INCLUDES := \
     $(TARGET_OUT_HEADERS)/wrs_omxil_core \
-    $(TARGET_OUT_HEADERS)/khronos/openmax \
     $(TARGET_OUT_HEADERS)/libmix_videodecoder \
     $(call include-path-for, frameworks-native)/media/hardware \
     $(call include-path-for, frameworks-native)/media/openmax \
@@ -100,11 +100,11 @@ LOCAL_SHARED_LIBRARIES := \
 
 LOCAL_HEADER_LIBRARIES := \
     intel_libva_headers \
+    khronos_openmax_headers \
     libnativebase_headers
 
 LOCAL_C_INCLUDES := \
     $(TARGET_OUT_HEADERS)/wrs_omxil_core \
-    $(TARGET_OUT_HEADERS)/khronos/openmax \
     $(TARGET_OUT_HEADERS)/libmix_videodecoder \
     $(call include-path-for, frameworks-native)/media/hardware \
     $(call include-path-for, frameworks-native)/media/openmax \
@@ -167,12 +167,12 @@ LOCAL_SHARED_LIBRARIES := \
 LOCAL_HEADER_LIBRARIES := \
     intel_hwcomposer_headers \
     intel_libva_headers \
+    khronos_openmax_headers \
     libnativebase_headers \
     libstagefright_foundation_headers
 
 LOCAL_C_INCLUDES := \
     $(TARGET_OUT_HEADERS)/wrs_omxil_core \
-    $(TARGET_OUT_HEADERS)/khronos/openmax \
     $(TARGET_OUT_HEADERS)/libmix_videodecoder \
     $(call include-path-for, frameworks-native)/media/hardware \
     $(call include-path-for, frameworks-native)/media/openmax \
@@ -229,12 +229,12 @@ LOCAL_SHARED_LIBRARIES := \
 
 LOCAL_HEADER_LIBRARIES := \
     intel_libva_headers \
+    khronos_openmax_headers \
     libnativebase_headers \
     libstagefright_foundation_headers
 
 LOCAL_C_INCLUDES := \
     $(TARGET_OUT_HEADERS)/wrs_omxil_core \
-    $(TARGET_OUT_HEADERS)/khronos/openmax \
     $(TARGET_OUT_HEADERS)/libmix_videodecoder \
     $(call include-path-for, frameworks-native)/media/hardware \
     $(call include-path-for, frameworks-native)/media/openmax \
@@ -294,12 +294,12 @@ LOCAL_SHARED_LIBRARIES := \
 
 LOCAL_HEADER_LIBRARIES := \
     intel_libva_headers \
+    khronos_openmax_headers \
     libnativebase_headers \
     libstagefright_foundation_headers
 
 LOCAL_C_INCLUDES := \
     $(TARGET_OUT_HEADERS)/wrs_omxil_core \
-    $(TARGET_OUT_HEADERS)/khronos/openmax \
     $(TARGET_OUT_HEADERS)/libmix_videodecoder \
     $(call include-path-for, frameworks-native)/media/hardware \
     $(call include-path-for, frameworks-native)/media/openmax \
@@ -358,12 +358,12 @@ LOCAL_SHARED_LIBRARIES := \
     libva-android
 
 LOCAL_HEADER_LIBRARIES := \
+    khronos_openmax_headers \
     libnativebase_headers \
     libstagefright_foundation_headers
 
 LOCAL_C_INCLUDES := \
     $(TARGET_OUT_HEADERS)/wrs_omxil_core \
-    $(TARGET_OUT_HEADERS)/khronos/openmax \
     $(TARGET_OUT_HEADERS)/libmix_videodecoder \
     $(call include-path-for, frameworks-native)/media/hardware \
     $(call include-path-for, frameworks-native)/media/openmax \
@@ -430,12 +430,12 @@ LOCAL_SHARED_LIBRARIES := \
     libcutils
 
 LOCAL_HEADER_LIBRARIES := \
+    khronos_openmax_headers \
     libnativebase_headers \
     libstagefright_foundation_headers
 
 LOCAL_C_INCLUDES := \
     $(TARGET_OUT_HEADERS)/wrs_omxil_core \
-    $(TARGET_OUT_HEADERS)/khronos/openmax \
     $(TARGET_OUT_HEADERS)/libmix_videodecoder \
     $(TARGET_OUT_HEADERS)/libdrm \
     $(call include-path-for, frameworks-native)/media/hardware \
@@ -488,12 +488,12 @@ LOCAL_SHARED_LIBRARIES := \
     libva-android
 
 LOCAL_HEADER_LIBRARIES := \
+    khronos_openmax_headers \
     libnativebase_headers \
     libstagefright_foundation_headers
 
 LOCAL_C_INCLUDES := \
     $(TARGET_OUT_HEADERS)/wrs_omxil_core \
-    $(TARGET_OUT_HEADERS)/khronos/openmax \
     $(TARGET_OUT_HEADERS)/libmix_videodecoder \
     $(call include-path-for, frameworks-native)/media/hardware \
     $(call include-path-for, frameworks-native)/media/openmax
@@ -542,7 +542,6 @@ LOCAL_SHARED_LIBRARIES := \
 
 LOCAL_C_INCLUDES := \
     $(TARGET_OUT_HEADERS)/wrs_omxil_core \
-    $(TARGET_OUT_HEADERS)/khronos/openmax \
     $(TARGET_OUT_HEADERS)/libmix_videoencoder \
     $(call include-path-for, frameworks-native)/media/hardware \
     $(call include-path-for, frameworks-native)/media/openmax \
@@ -552,7 +551,7 @@ LOCAL_SRC_FILES := \
     OMXVideoEncoderBase.cpp \
     OMXVideoEncoderAVC.cpp
 
-LOCAL_HEADER_LIBRARIES := libstagefright_foundation_headers
+LOCAL_HEADER_LIBRARIES := khronos_openmax_headers libstagefright_foundation_headers
 LOCAL_CFLAGS += $(LOCAL_C_FLAGS)
 LOCAL_CFLAGS += -Werror
 LOCAL_MODULE_TAGS := optional
@@ -580,7 +579,6 @@ LOCAL_SHARED_LIBRARIES := \
 
 LOCAL_C_INCLUDES := \
     $(TARGET_OUT_HEADERS)/wrs_omxil_core \
-    $(TARGET_OUT_HEADERS)/khronos/openmax \
     $(TARGET_OUT_HEADERS)/libmix_videoencoder \
     $(call include-path-for, frameworks-native)/media/hardware \
     $(call include-path-for, frameworks-native)/media/openmax \
@@ -596,7 +594,7 @@ ifeq ($(SW_MPEG4_ENCODER),true)
     LOCAL_CFLAGS += -DSYNC_MODE
 endif
 
-LOCAL_HEADER_LIBRARIES := libstagefright_foundation_headers
+LOCAL_HEADER_LIBRARIES := khronos_openmax_headers libstagefright_foundation_headers
 LOCAL_CFLAGS += -Werror
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := libOMXVideoEncoderH263
@@ -623,7 +621,6 @@ LOCAL_SHARED_LIBRARIES := \
 
 LOCAL_C_INCLUDES := \
     $(TARGET_OUT_HEADERS)/wrs_omxil_core \
-    $(TARGET_OUT_HEADERS)/khronos/openmax \
     $(TARGET_OUT_HEADERS)/libmix_videoencoder \
     $(call include-path-for, frameworks-native)/media/hardware \
     $(call include-path-for, frameworks-native)/media/openmax \
@@ -635,7 +632,7 @@ LOCAL_SRC_FILES := \
 
 LOCAL_CFLAGS += $(LOCAL_C_FLAGS)
 
-LOCAL_HEADER_LIBRARIES := libstagefright_foundation_headers
+LOCAL_HEADER_LIBRARIES := khronos_openmax_headers libstagefright_foundation_headers
 LOCAL_CFLAGS += -Werror
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := libOMXVideoEncoderMPEG4
@@ -656,12 +653,12 @@ LOCAL_SHARED_LIBRARIES := \
     libva-android
 
 LOCAL_HEADER_LIBRARIES := \
+    khronos_openmax_headers \
     libnativebase_headers \
     libstagefright_foundation_headers
 
 LOCAL_C_INCLUDES := \
     $(TARGET_OUT_HEADERS)/wrs_omxil_core \
-    $(TARGET_OUT_HEADERS)/khronos/openmax \
     $(TARGET_OUT_HEADERS)/libmix_videodecoder \
     $(call include-path-for, frameworks-native)/media/hardware \
     $(call include-path-for, frameworks-native)/media/openmax \
@@ -713,7 +710,6 @@ LOCAL_SHARED_LIBRARIES := \
 
 LOCAL_C_INCLUDES := \
     $(TARGET_OUT_HEADERS)/wrs_omxil_core \
-    $(TARGET_OUT_HEADERS)/khronos/openmax \
     $(TARGET_OUT_HEADERS)/libmix_videoencoder \
     $(call include-path-for, frameworks-native)/media/hardware \
     $(call include-path-for, frameworks-native)/media/openmax \
@@ -723,7 +719,7 @@ LOCAL_SRC_FILES := \
     OMXVideoEncoderBase.cpp \
     OMXVideoEncoderVP8.cpp
 
-LOCAL_HEADER_LIBRARIES := libstagefright_foundation_headers
+LOCAL_HEADER_LIBRARIES := khronos_openmax_headers libstagefright_foundation_headers
 LOCAL_CFLAGS += $(LOCAL_C_FLAGS)
 LOCAL_CFLAGS += -Werror
 LOCAL_MODULE_TAGS := optional
