@@ -16,7 +16,7 @@
 
 #define LOG_TAG "OMXVideoEncoderAVC"
 #include "OMXVideoEncoderAVC.h"
-#include "IntelMetadataBuffer.h"
+#include <videoencoder/IntelMetadataBuffer.h>
 
 static const char *AVC_MIME_TYPE = "video/h264";
 

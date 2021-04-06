@@ -20,8 +20,8 @@
 
 
 #include "OMXComponentCodecBase.h"
-#include "VideoDecoderInterface.h"
-#include "VideoDecoderHost.h"
+#include <videodecoder/VideoDecoderInterface.h>
+#include <videodecoder/VideoDecoderHost.h>
 
 #ifdef USE_GEN_HW
 #include "graphics.h"

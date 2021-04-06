@@ -22,7 +22,7 @@
 #include "OMXComponentCodecBase.h"
 #include <va/va_tpi.h>
 #include <va/va_android.h>
-#include <VideoEncoderHost.h>
+#include <videoencoder/VideoEncoderHost.h>
 
 #include <OMX_VideoExt.h>
 #include <OMX_IndexExt.h>

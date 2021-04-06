@@ -17,7 +17,7 @@
 
 #define LOG_TAG "OMXVideoEncoderBase"
 #include "OMXVideoEncoderBase.h"
-#include "IntelMetadataBuffer.h"
+#include <videoencoder/IntelMetadataBuffer.h>
 #include <cutils/properties.h>
 #include <log.h>
 #include <media/stagefright/foundation/AUtils.h>
