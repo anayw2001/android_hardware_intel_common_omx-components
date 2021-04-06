@@ -21,14 +21,14 @@
 static const char *MPEG4_MIME_TYPE = "video/mpeg4";
 
 OMXVideoEncoderMPEG4::OMXVideoEncoderMPEG4() {
-    LOGV("OMXVideoEncoderMPEG4 is constructed.");
+    OMX_LOGV("OMXVideoEncoderMPEG4 is constructed.");
     BuildHandlerList();
     mVideoEncoder = createVideoEncoder(MPEG4_MIME_TYPE);
     if (!mVideoEncoder) LOGE("OMX_ErrorInsufficientResources");
 }
 
 OMXVideoEncoderMPEG4::~OMXVideoEncoderMPEG4() {
-    LOGV("OMXVideoEncoderMPEG4 is destructed.");
+    OMX_LOGV("OMXVideoEncoderMPEG4 is destructed.");
 }
 
 OMX_ERRORTYPE OMXVideoEncoderMPEG4::InitOutputPortFormatSpecific(OMX_PARAM_PORTDEFINITIONTYPE *paramPortDefinitionOutput) {
@@ -92,11 +92,11 @@ OMX_ERRORTYPE OMXVideoEncoderMPEG4::ProcessorProcess(
     OMX_ERRORTYPE oret = OMX_ErrorNone;
 
 
-    LOGV_IF(buffers[INPORT_INDEX]->nFlags & OMX_BUFFERFLAG_EOS,
+    OMX_LOGV_IF(buffers[INPORT_INDEX]->nFlags & OMX_BUFFERFLAG_EOS,
             "%s(),%d: got OMX_BUFFERFLAG_EOS\n", __func__, __LINE__);
 
     if (!buffers[INPORT_INDEX]->nFilledLen) {
-        LOGV("%s(),%d: input buffer's nFilledLen is zero\n",  __func__, __LINE__);
+        OMX_LOGV("%s(),%d: input buffer's nFilledLen is zero\n",  __func__, __LINE__);
         goto out;
     }
 
@@ -106,7 +106,7 @@ OMX_ERRORTYPE OMXVideoEncoderMPEG4::ProcessorProcess(
     inBuf.flag = 0;
     inBuf.timeStamp = buffers[INPORT_INDEX]->nTimeStamp;
 
-    LOGV("inBuf.data=%x, size=%d", (unsigned)inBuf.data, inBuf.size);
+    OMX_LOGV("inBuf.data=%x, size=%d", (unsigned)inBuf.data, inBuf.size);
 
     outBuf.data =
         buffers[OUTPORT_INDEX]->pBuffer + buffers[OUTPORT_INDEX]->nOffset;
@@ -129,7 +129,7 @@ OMX_ERRORTYPE OMXVideoEncoderMPEG4::ProcessorProcess(
     }
 
     if (mFirstFrame) {
-        LOGV("mFirstFrame\n");
+        OMX_LOGV("mFirstFrame\n");
         outBuf.format = OUTPUT_CODEC_DATA;
         ret = mVideoEncoder->getOutput(&outBuf);
         CHECK_ENCODE_STATUS("getOutput");
@@ -139,7 +139,7 @@ OMX_ERRORTYPE OMXVideoEncoderMPEG4::ProcessorProcess(
             return OMX_ErrorUndefined;
         }
 
-        LOGV("output codec data size = %d", outBuf.dataSize);
+        OMX_LOGV("output codec data size = %d", outBuf.dataSize);
 
         outflags |= OMX_BUFFERFLAG_CODECCONFIG;
         outflags |= OMX_BUFFERFLAG_ENDOFFRAME;
@@ -160,7 +160,7 @@ OMX_ERRORTYPE OMXVideoEncoderMPEG4::ProcessorProcess(
         mVideoEncoder->getOutput(&outBuf);
         CHECK_ENCODE_STATUS("getOutput");
 
-        LOGV("output data size = %d", outBuf.dataSize);
+        OMX_LOGV("output data size = %d", outBuf.dataSize);
 
 
         outfilledlen = outBuf.dataSize;
@@ -171,7 +171,7 @@ OMX_ERRORTYPE OMXVideoEncoderMPEG4::ProcessorProcess(
         }
 
         if (outBuf.flag & ENCODE_BUFFERFLAG_ENDOFFRAME) {
-            LOGV("Get buffer done\n");
+            OMX_LOGV("Get buffer done\n");
             outflags |= OMX_BUFFERFLAG_ENDOFFRAME;
             mFrameRetrieved = OMX_TRUE;
             if (mSyncEncoding)
@@ -212,7 +212,7 @@ OMX_ERRORTYPE OMXVideoEncoderMPEG4::ProcessorProcess(
         average_fps = (current_fps + lastFps) / 2;
         lastFps = current_fps;
 
-        LOGV("FPS = %2.1f\n", average_fps);
+        OMX_LOGV("FPS = %2.1f\n", average_fps);
     }
 #endif
 
@@ -267,7 +267,7 @@ OMX_ERRORTYPE OMXVideoEncoderMPEG4::GetParamVideoProfileLevelQuerySupported(OMX_
 }
 
 OMX_ERRORTYPE OMXVideoEncoderMPEG4::SetParamVideoProfileLevelQuerySupported(OMX_PTR) {
-    LOGW("SetParamVideoMpeg4ProfileLevel is not supported.");
+    OMX_LOGW("SetParamVideoMpeg4ProfileLevel is not supported.");
     return OMX_ErrorUnsupportedSetting;
 }
 

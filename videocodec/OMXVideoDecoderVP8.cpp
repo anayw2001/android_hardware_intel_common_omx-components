@@ -17,7 +17,7 @@
 
 // #define LOG_NDEBUG 0
 #define LOG_TAG "OMXVideoDecoder"
-#include <wrs_omxil_core/log.h>
+#include <log.h>
 #include "OMXVideoDecoderVP8.h"
 // Be sure to have an equal string in VideoDecoderHost.cpp (libmix)
 static const char* VP8_MIME_TYPE = "video/x-vnd.on2.vp8";

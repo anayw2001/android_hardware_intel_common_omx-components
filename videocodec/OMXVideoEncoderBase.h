@@ -27,12 +27,12 @@
 #include <OMX_VideoExt.h>
 #include <OMX_IndexExt.h>
 
-#define LOGV(...) ALOGI_IF(mOmxLogLevel, __VA_ARGS__)
-#define LOGI(...) ALOGI_IF(mOmxLogLevel, __VA_ARGS__)
-#define LOGW(...) ALOGI_IF(mOmxLogLevel, __VA_ARGS__)
-#define LOGD(...) ALOGI_IF(mOmxLogLevel, __VA_ARGS__)
+#define OMX_LOGV(...) ALOGI_IF(mOmxLogLevel, __VA_ARGS__)
+#define OMX_LOGI(...) ALOGI_IF(mOmxLogLevel, __VA_ARGS__)
+#define OMX_LOGW(...) ALOGI_IF(mOmxLogLevel, __VA_ARGS__)
+#define OMX_LOGD(...) ALOGI_IF(mOmxLogLevel, __VA_ARGS__)
 #define LOGE ALOGE
-#define LOGV_IF ALOGV_IF
+#define OMX_LOGV_IF ALOGV_IF
 
 
 using android::sp;

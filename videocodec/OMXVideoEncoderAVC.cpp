@@ -107,7 +107,7 @@ OMXVideoEncoderAVC::OMXVideoEncoderAVC() {
             mPLTable[mPLTableCount].profile = ProfileTable[profile_index].key;
             mPLTable[mPLTableCount].level = LevelTable[level_index].key;
             mPLTableCount ++;
-            LOGV("Support Profile:%s, Level:%s\n", ProfileTable[profile_index].name, LevelTable[level_index].name);
+            OMX_LOGV("Support Profile:%s, Level:%s\n", ProfileTable[profile_index].name, LevelTable[level_index].name);
         }
     }
 
@@ -195,7 +195,7 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::InitOutputPortFormatSpecific(OMX_PARAM_PORTDEF
 OMX_ERRORTYPE OMXVideoEncoderAVC::SetVideoEncoderParam(void) {
 
     Encode_Status ret = ENCODE_SUCCESS;
-    LOGV("OMXVideoEncoderAVC::SetVideoEncoderParam");
+    OMX_LOGV("OMXVideoEncoderAVC::SetVideoEncoderParam");
 
     if (!mEncoderParams) {
         LOGE("NULL pointer: mEncoderParams");
@@ -248,13 +248,13 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::SetVideoEncoderParam(void) {
     ret = mVideoEncoder ->setParameters(mAVCParams);
     CHECK_ENCODE_STATUS("setParameters");
 
-    LOGV("VUIFlag = %d\n", mAVCParams->VUIFlag);
-    LOGV("sliceNum.iSliceNum = %d\n", mAVCParams->sliceNum.iSliceNum);
-    LOGV("sliceNum.pSliceNum = %d\n", mAVCParams->sliceNum.pSliceNum);
-    LOGV("maxSliceSize = %d\n ", mAVCParams->maxSliceSize);
-    LOGV("intraPeriod = %d\n ", mEncoderParams->intraPeriod);
-    LOGV("idrInterval = %d\n ", mAVCParams->idrInterval);
-    LOGV("ipPeriod = %d\n ", mAVCParams->ipPeriod);
+    OMX_LOGV("VUIFlag = %d\n", mAVCParams->VUIFlag);
+    OMX_LOGV("sliceNum.iSliceNum = %d\n", mAVCParams->sliceNum.iSliceNum);
+    OMX_LOGV("sliceNum.pSliceNum = %d\n", mAVCParams->sliceNum.pSliceNum);
+    OMX_LOGV("maxSliceSize = %d\n ", mAVCParams->maxSliceSize);
+    OMX_LOGV("intraPeriod = %d\n ", mEncoderParams->intraPeriod);
+    OMX_LOGV("idrInterval = %d\n ", mAVCParams->idrInterval);
+    OMX_LOGV("ipPeriod = %d\n ", mAVCParams->ipPeriod);
     return OMX_ErrorNone;
 }
 
@@ -302,7 +302,7 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::ProcessorPreEmptyBuffer(OMX_BUFFERHEADERTYPE* 
     else
         GOP = IntraPeriod*idrPeriod;
 
-    LOGV("ProcessorPreEmptyBuffer idrPeriod=%d, IntraPeriod=%d, IpPeriod=%d, BFrameEnabled=%d\n", idrPeriod, IntraPeriod, IpPeriod, BFrameEnabled);
+    OMX_LOGV("ProcessorPreEmptyBuffer idrPeriod=%d, IntraPeriod=%d, IpPeriod=%d, BFrameEnabled=%d\n", idrPeriod, IntraPeriod, IpPeriod, BFrameEnabled);
 
     //decide frame type, refer Merrifield Video Encoder Driver HLD Chapter 3.17
     poc = mInputPictureCount % GOP;
@@ -329,7 +329,7 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::ProcessorPreEmptyBuffer(OMX_BUFFERHEADERTYPE* 
 
     buffer->pPlatformPrivate = (OMX_PTR) EncodeInfo;
 
-    LOGV("ProcessorPreEmptyBuffer Frame %d, Type %s, EncodeInfo %x\n", mInputPictureCount, FrameTypeStr[EncodeFrameType], EncodeInfo);
+    OMX_LOGV("ProcessorPreEmptyBuffer Frame %d, Type %s, EncodeInfo %x\n", mInputPictureCount, FrameTypeStr[EncodeFrameType], EncodeInfo);
 
     mInputPictureCount ++;
     return OMX_ErrorNone;
@@ -348,7 +348,7 @@ OMX_BOOL OMXVideoEncoderAVC::ProcessCacheOperation(OMX_BUFFERHEADERTYPE **buffer
     eInfo.NotStopFrame		= encodeInfo & ENC_NSTOP;
     eInfo.FrameCount		 = GET_FC(encodeInfo);
 
-    LOGV("ProcessCacheOperation Frame %d, type:%s, CacheOps:%s, NoSTOP=%d, EOS=%d\n",
+    OMX_LOGV("ProcessCacheOperation Frame %d, type:%s, CacheOps:%s, NoSTOP=%d, EOS=%d\n",
             eInfo.FrameCount, FrameTypeStr[eInfo.FrameType], CacheOperationStr[eInfo.CacheOperation],
             eInfo.NotStopFrame, buffers[INPORT_INDEX]->nFlags & OMX_BUFFERFLAG_EOS);
 
@@ -356,7 +356,7 @@ OMX_BOOL OMXVideoEncoderAVC::ProcessCacheOperation(OMX_BUFFERHEADERTYPE **buffer
     if (buffers[INPORT_INDEX]->nFilledLen == 0 && buffers[INPORT_INDEX]->nFlags & OMX_BUFFERFLAG_EOS) {
         //meet an empty EOS buffer
         emptyEOSBuf = OMX_TRUE;
-        LOGV("ProcessCacheOperation: This frame is Empty EOS buffer\n");
+        OMX_LOGV("ProcessCacheOperation: This frame is Empty EOS buffer\n");
     }
 
     if (eInfo.CacheOperation == CACHE_NONE) {
@@ -364,7 +364,7 @@ OMX_BOOL OMXVideoEncoderAVC::ProcessCacheOperation(OMX_BUFFERHEADERTYPE **buffer
     } else if (eInfo.CacheOperation == CACHE_PUSH) {
         mBFrameList.push_front(buffers[INPORT_INDEX]);
         Cached = OMX_TRUE;
-        LOGV("ProcessCacheOperation: This B frame is cached\n");
+        OMX_LOGV("ProcessCacheOperation: This B frame is cached\n");
 
     } else if (eInfo.CacheOperation == CACHE_POP) {
         eInfo.NotStopFrame = true;  //it is also a nstop frame
@@ -373,7 +373,7 @@ OMX_BOOL OMXVideoEncoderAVC::ProcessCacheOperation(OMX_BUFFERHEADERTYPE **buffer
         uint32_t i = 0;
         uint32_t bframecount = mBFrameList.size();
 
-        LOGV("BFrameList size = %d\n", bframecount);
+        OMX_LOGV("BFrameList size = %d\n", bframecount);
 
         while(!mBFrameList.empty()) {
             /*TODO: need to handle null data buffer with EOS
@@ -429,7 +429,7 @@ OMX_BOOL OMXVideoEncoderAVC::ProcessCacheOperation(OMX_BUFFERHEADERTYPE **buffer
     SET_CO(encodeInfo, eInfo.CacheOperation);
     buffers[INPORT_INDEX]->pPlatformPrivate = (OMX_PTR) encodeInfo;
 
-    LOGV("ProcessCacheOperation Completed return %d\n", Cached);
+    OMX_LOGV("ProcessCacheOperation Completed return %d\n", Cached);
     return Cached;
 }
 
@@ -466,7 +466,7 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::ProcessDataRetrieve(
             if (NaluFormat == (OMX_NALUFORMATSTYPE)OMX_NaluFormatStartCodesSeparateFirstHeader||
                 NaluFormat == (OMX_NALUFORMATSTYPE)OMX_NaluFormatLengthPrefixedSeparateFirstHeader){
                 if(!mCSDOutputted) {
-                    LOGV("Output codec data for first frame\n");
+                    OMX_LOGV("Output codec data for first frame\n");
                     outBuf.format = OUTPUT_CODEC_DATA;
                 } else {
                     if (NaluFormat == (OMX_NALUFORMATSTYPE)OMX_NaluFormatStartCodesSeparateFirstHeader)
@@ -491,7 +491,7 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::ProcessDataRetrieve(
             if (mEmptyEOSBuf) {
                 //make sure no data encoding in HW, then emit one empty out buffer with EOS
                 outBuf.flag |= ENCODE_BUFFERFLAG_ENDOFSTREAM;
-                LOGV("no more data encoding, will signal empty EOS output buf\n");
+                OMX_LOGV("no more data encoding, will signal empty EOS output buf\n");
             } else {
                 //if not meet Empty EOS buffer, shouldn't get this error
                 LOGE("sever error, should not happend here\n");
@@ -504,11 +504,11 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::ProcessDataRetrieve(
         // Return code could not be ENCODE_BUFFER_TOO_SMALL, or we will have dead lock issue
         return OMX_ErrorUndefined;
     } else if (ret == ENCODE_DATA_NOT_READY) {
-        LOGV("Call libMIX getOutput againe due to 'data not ready'\n");
+        OMX_LOGV("Call libMIX getOutput againe due to 'data not ready'\n");
         ret = mVideoEncoder->getOutput(&outBuf);
     }
 
-    LOGV("libMIX getOutput data size= %d, flag=0x%08x", outBuf.dataSize, outBuf.flag);
+    OMX_LOGV("libMIX getOutput data size= %d, flag=0x%08x", outBuf.dataSize, outBuf.flag);
     OMX_U32 outfilledlen = outBuf.dataSize;
     OMX_U32 outoffset = outBuf.offset;
     OMX_S64 outtimestamp = outBuf.timeStamp;
@@ -528,7 +528,7 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::ProcessDataRetrieve(
 
     //if full encoded data retrieved
     if(outBuf.flag & ENCODE_BUFFERFLAG_ENDOFFRAME) {
-        LOGV("got a complete libmix Frame\n");
+        OMX_LOGV("got a complete libmix Frame\n");
         outflags |= OMX_BUFFERFLAG_ENDOFFRAME;
 
         if ((NaluFormat == (OMX_NALUFORMATSTYPE)OMX_NaluFormatStartCodesSeparateFirstHeader
@@ -549,7 +549,7 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::ProcessDataRetrieve(
             buffers[OUTPORT_INDEX]->nTimeStamp = 0;
             buffers[OUTPORT_INDEX]->nFlags = outflags;
             *outBufReturned = OMX_TRUE;
-            LOGV("emit one empty EOS OMX output buf = %p:%d, flag = 0x%08x, ts=%lld", buffers[OUTPORT_INDEX]->pBuffer, outfilledlen, outflags, outtimestamp);
+            OMX_LOGV("emit one empty EOS OMX output buf = %p:%d, flag = 0x%08x, ts=%lld", buffers[OUTPORT_INDEX]->pBuffer, outfilledlen, outflags, outtimestamp);
         } else
             //not emit out buf since something wrong
             *outBufReturned = OMX_FALSE;
@@ -562,11 +562,11 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::ProcessDataRetrieve(
         if (outBuf.flag & ENCODE_BUFFERFLAG_NSTOPFRAME)
             buffers[OUTPORT_INDEX]->pPlatformPrivate = (OMX_PTR) 0x00000001;  //indicate it is nstop frame
         *outBufReturned = OMX_TRUE;
-        LOGV("emit one OMX output buf = %p:%d, flag = 0x%08x, ts=%lld", buffers[OUTPORT_INDEX]->pBuffer, outfilledlen, outflags, outtimestamp);
+        OMX_LOGV("emit one OMX output buf = %p:%d, flag = 0x%08x, ts=%lld", buffers[OUTPORT_INDEX]->pBuffer, outfilledlen, outflags, outtimestamp);
 
     }
 
-    LOGV("ProcessDataRetrieve OK, mFrameEncodedCount=%d , mFrameOutputCount=%d\n", mFrameEncodedCount, mFrameOutputCount);
+    OMX_LOGV("ProcessDataRetrieve OK, mFrameEncodedCount=%d , mFrameOutputCount=%d\n", mFrameEncodedCount, mFrameOutputCount);
     return OMX_ErrorNone;
 }
 
@@ -581,7 +581,7 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::ProcessorProcess(
     bool FrameEncoded = false;
 
     if (buffers[INPORT_INDEX]) {
-        LOGV("input buffer has new frame\n");
+        OMX_LOGV("input buffer has new frame\n");
 
         //get frame encode info
         Encode_Info eInfo;
@@ -621,23 +621,23 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::ProcessorProcess(
             inBuf.flag |= ENCODE_BUFFERFLAG_NSTOPFRAME;
         inBuf.type = (FrameType) eInfo.FrameType;
 
-        LOGV("start libmix encoding\n");
+        OMX_LOGV("start libmix encoding\n");
         // encode and setConfig need to be thread safe
         pthread_mutex_lock(&mSerializationLock);
         ret = mVideoEncoder->encode(&inBuf, FUNC_NONBLOCK);
         pthread_mutex_unlock(&mSerializationLock);
-        LOGV("end libmix encoding\n");
+        OMX_LOGV("end libmix encoding\n");
 
 		retains[INPORT_INDEX] = BUFFER_RETAIN_NOT_RETAIN;
         if (ret == ENCODE_DEVICE_BUSY) {
 			//encoder is busy, put buf back and come again
-            LOGV("encoder is busy, push buffer back to get again\n");
+            OMX_LOGV("encoder is busy, push buffer back to get again\n");
             retains[INPORT_INDEX] = BUFFER_RETAIN_GETAGAIN;
         } else {
             //if error, this buf will be returned
             CHECK_ENCODE_STATUS("encode");
 
-            LOGV("put buffer to encoder and retain this buffer\n");
+            OMX_LOGV("put buffer to encoder and retain this buffer\n");
             mFrameEncodedCount ++;
             FrameEncoded = true;
             retains[INPORT_INDEX] = BUFFER_RETAIN_ACCUMULATE;
@@ -645,7 +645,7 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::ProcessorProcess(
 
     } else {
         //no new coming frames, but maybe still have frames not outputted
-        LOGV("input buffer is null\n");
+        OMX_LOGV("input buffer is null\n");
     }
 
     retains[OUTPORT_INDEX] = BUFFER_RETAIN_GETAGAIN; //set to default value
@@ -657,7 +657,7 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::ProcessorProcess(
             retains[OUTPORT_INDEX] = BUFFER_RETAIN_NOT_RETAIN;
     }
 
-    LOGV("ProcessorProcess ret=%x", oret);
+    OMX_LOGV("ProcessorProcess ret=%x", oret);
     return oret;
 
 }
@@ -692,7 +692,7 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::GetParamVideoProfileLevelQuerySupported(OMX_PT
 }
 
 OMX_ERRORTYPE OMXVideoEncoderAVC::SetParamVideoProfileLevelQuerySupported(OMX_PTR) {
-    LOGW("SetParamVideoAVCProfileLevel is not supported.");
+    OMX_LOGW("SetParamVideoAVCProfileLevel is not supported.");
     return OMX_ErrorUnsupportedSetting;
 }
 
@@ -798,7 +798,7 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::SetParamNalStreamFormat(OMX_PTR pStructure) {
 
     CHECK_TYPE_HEADER(p);
     CHECK_PORT_INDEX(p, OUTPORT_INDEX);
-    LOGV("p->eNaluFormat =%d\n",p->eNaluFormat);
+    OMX_LOGV("p->eNaluFormat =%d\n",p->eNaluFormat);
     if(p->eNaluFormat != OMX_NaluFormatStartCodes &&
             p->eNaluFormat != (OMX_NALUFORMATSTYPE)OMX_NaluFormatStartCodesSeparateFirstHeader &&
             p->eNaluFormat != OMX_NaluFormatOneNaluPerBuffer &&
@@ -829,12 +829,12 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::GetParamNalStreamFormatSupported(OMX_PTR pStru
 }
 
 OMX_ERRORTYPE OMXVideoEncoderAVC::SetParamNalStreamFormatSupported(OMX_PTR) {
-    LOGW("SetParamNalStreamFormatSupported is not supported.");
+    OMX_LOGW("SetParamNalStreamFormatSupported is not supported.");
     return OMX_ErrorUnsupportedSetting;
 }
 
 OMX_ERRORTYPE OMXVideoEncoderAVC::GetParamNalStreamFormatSelect(OMX_PTR) {
-    LOGW("GetParamNalStreamFormatSelect is not supported.");
+    OMX_LOGW("GetParamNalStreamFormatSelect is not supported.");
     return OMX_ErrorUnsupportedSetting;
 }
 
@@ -914,7 +914,7 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::SetConfigVideoAVCIntraPeriod(OMX_PTR pStructur
 
     retStatus = mVideoEncoder->setConfig(&avcIntraPreriod);
     if(retStatus !=  ENCODE_SUCCESS) {
-        LOGW("set avc intra period config failed");
+        OMX_LOGW("set avc intra period config failed");
     }
 
     mEncoderParams->intraPeriod = avcIntraPreriod.intraPeriod;
@@ -963,7 +963,7 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::SetConfigVideoNalSize(OMX_PTR pStructure) {
     configNalSize.maxSliceSize = mConfigNalSize.nNaluBytes * 8;
     retStatus = mVideoEncoder->setConfig(&configNalSize);
     if(retStatus != ENCODE_SUCCESS) {
-        LOGW("set NAL size config failed");
+        OMX_LOGW("set NAL size config failed");
     }
     return OMX_ErrorNone;
 }
@@ -1005,7 +1005,7 @@ OMX_ERRORTYPE OMXVideoEncoderAVC::SetConfigIntelSliceNumbers(OMX_PTR pStructure)
     sliceNum.sliceNum.pSliceNum = mConfigIntelSliceNumbers.nPSliceNumber;
     retStatus = mVideoEncoder->setConfig(&sliceNum);
     if(retStatus != ENCODE_SUCCESS) {
-        LOGW("set silce num config failed!\n");
+        OMX_LOGW("set silce num config failed!\n");
     }
     return OMX_ErrorNone;
 }

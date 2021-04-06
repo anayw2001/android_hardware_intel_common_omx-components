@@ -21,7 +21,7 @@
 static const char *H263_MIME_TYPE = "video/h263";
 
 OMXVideoEncoderH263::OMXVideoEncoderH263() {
-    LOGV("Constructer for OMXVideoEncoderH263.");
+    OMX_LOGV("Constructer for OMXVideoEncoderH263.");
     BuildHandlerList();
     mVideoEncoder = createVideoEncoder(H263_MIME_TYPE);
     if (!mVideoEncoder) LOGE("OMX_ErrorInsufficientResources");
@@ -31,7 +31,7 @@ OMXVideoEncoderH263::OMXVideoEncoderH263() {
 }
 
 OMXVideoEncoderH263::~OMXVideoEncoderH263() {
-    LOGV("Destructer for OMXVideoEncoderH263.");
+    OMX_LOGV("Destructer for OMXVideoEncoderH263.");
 }
 
 OMX_ERRORTYPE OMXVideoEncoderH263::InitOutputPortFormatSpecific(OMX_PARAM_PORTDEFINITIONTYPE *paramPortDefinitionOutput) {
@@ -76,7 +76,7 @@ OMX_ERRORTYPE OMXVideoEncoderH263::SetVideoEncoderParam(void) {
 }
 
 OMX_ERRORTYPE OMXVideoEncoderH263::ProcessorInit(void) {
-    LOGV("OMXVideoEncoderH263::ProcessorInit\n");
+    OMX_LOGV("OMXVideoEncoderH263::ProcessorInit\n");
     return OMXVideoEncoderBase::ProcessorInit();
 }
 
@@ -88,7 +88,7 @@ OMX_ERRORTYPE OMXVideoEncoderH263::ProcessorProcess(
     OMX_BUFFERHEADERTYPE **buffers,
     buffer_retain_t *retains,
     OMX_U32) {
-    LOGV("OMXVideoEncoderH263::ProcessorProcess \n");
+    OMX_LOGV("OMXVideoEncoderH263::ProcessorProcess \n");
 
     VideoEncOutputBuffer outBuf;
     VideoEncRawBuffer inBuf;
@@ -99,9 +99,9 @@ OMX_ERRORTYPE OMXVideoEncoderH263::ProcessorProcess(
     OMX_ERRORTYPE oret = OMX_ErrorNone;
     Encode_Status ret = ENCODE_SUCCESS;
 
-    LOGV("%s(): enter encode\n", __func__);
+    OMX_LOGV("%s(): enter encode\n", __func__);
 
-    LOGV_IF(buffers[INPORT_INDEX]->nFlags & OMX_BUFFERFLAG_EOS,
+    OMX_LOGV_IF(buffers[INPORT_INDEX]->nFlags & OMX_BUFFERFLAG_EOS,
             "%s(),%d: got OMX_BUFFERFLAG_EOS\n", __func__, __LINE__);
 
     if (!buffers[INPORT_INDEX]->nFilledLen) {
@@ -115,7 +115,7 @@ OMX_ERRORTYPE OMXVideoEncoderH263::ProcessorProcess(
     inBuf.flag = 0;
     inBuf.timeStamp = buffers[INPORT_INDEX]->nTimeStamp;
 
-    LOGV("buffer_in.data=%x, data_size=%d",
+    OMX_LOGV("buffer_in.data=%x, data_size=%d",
          (unsigned)inBuf.data, inBuf.size);
 
     outBuf.data =	buffers[OUTPORT_INDEX]->pBuffer + buffers[OUTPORT_INDEX]->nOffset;
@@ -157,7 +157,7 @@ OMX_ERRORTYPE OMXVideoEncoderH263::ProcessorProcess(
         goto out;
     }
 
-    LOGV("output data size = %d", outBuf.dataSize);
+    OMX_LOGV("output data size = %d", outBuf.dataSize);
     outfilledlen = outBuf.dataSize;
     outtimestamp = outBuf.timeStamp;
 
@@ -187,7 +187,7 @@ OMX_ERRORTYPE OMXVideoEncoderH263::ProcessorProcess(
 
 
     if(ret == ENCODE_SLICESIZE_OVERFLOW) {
-        LOGV("%s(), mix_video_encode returns MIX_RESULT_VIDEO_ENC_SLICESIZE_OVERFLOW"
+        OMX_LOGV("%s(), mix_video_encode returns MIX_RESULT_VIDEO_ENC_SLICESIZE_OVERFLOW"
              , __func__);
         oret = (OMX_ERRORTYPE)OMX_ErrorIntelExtSliceSizeOverflow;
     }
@@ -208,7 +208,7 @@ OMX_ERRORTYPE OMXVideoEncoderH263::ProcessorProcess(
         average_fps = (current_fps + lastFps) / 2;
         lastFps = current_fps;
 
-        LOGD("FPS = %2.1f\n", average_fps);
+        OMX_LOGD("FPS = %2.1f\n", average_fps);
     }
 #endif
 
@@ -219,7 +219,7 @@ out:
         buffers[OUTPORT_INDEX]->nTimeStamp = outtimestamp;
         buffers[OUTPORT_INDEX]->nFlags = outflags;
 
-        LOGV("********** output buffer: len=%d, ts=%lld, flags=%x",
+        OMX_LOGV("********** output buffer: len=%d, ts=%lld, flags=%x",
              outfilledlen,
              outtimestamp,
              outflags);
@@ -233,7 +233,7 @@ out:
     if (retains[OUTPORT_INDEX] == BUFFER_RETAIN_NOT_RETAIN)
         mFrameOutputCount ++;
 
-    LOGV_IF(oret == OMX_ErrorNone, "%s(),%d: exit, encode is done\n", __func__, __LINE__);
+    OMX_LOGV_IF(oret == OMX_ErrorNone, "%s(),%d: exit, encode is done\n", __func__, __LINE__);
 
     return oret;
 
@@ -269,7 +269,7 @@ OMX_ERRORTYPE OMXVideoEncoderH263::GetParamVideoProfileLevelQuerySupported(OMX_P
 }
 
 OMX_ERRORTYPE OMXVideoEncoderH263::SetParamVideoProfileLevelQuerySupported(OMX_PTR) {
-    LOGW("SetParamVideoH263ProfileLevel is not supported.");
+    OMX_LOGW("SetParamVideoH263ProfileLevel is not supported.");
     return OMX_ErrorUnsupportedSetting;
 }
 

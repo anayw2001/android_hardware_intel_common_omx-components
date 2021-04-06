@@ -19,7 +19,7 @@
 #include "OMXVideoEncoderBase.h"
 #include "IntelMetadataBuffer.h"
 #include <cutils/properties.h>
-#include <wrs_omxil_core/log.h>
+#include <log.h>
 #include <media/stagefright/foundation/AUtils.h>
 
 static const char *RAW_MIME_TYPE = "video/raw";
@@ -41,10 +41,10 @@ OMXVideoEncoderBase::OMXVideoEncoderBase()
     char logLevelProp[128];
     if (property_get("omxenc.debug", logLevelProp, NULL)) {
         mOmxLogLevel = atoi(logLevelProp);
-        LOGD("Debug level is %d", mOmxLogLevel);
+        OMX_LOGD("Debug level is %d", mOmxLogLevel);
     } 
 
-    LOGV("OMXVideoEncoderBase::OMXVideoEncoderBase end");
+    OMX_LOGV("OMXVideoEncoderBase::OMXVideoEncoderBase end");
 }
 
 OMXVideoEncoderBase::~OMXVideoEncoderBase() {
@@ -281,7 +281,7 @@ OMX_ERRORTYPE OMXVideoEncoderBase::SetVideoEncoderParam() {
     Encode_Status ret = ENCODE_SUCCESS;
     PortVideo *port_in = NULL;
     const OMX_PARAM_PORTDEFINITIONTYPE *paramPortDefinitionInput = NULL;
-    LOGV("OMXVideoEncoderBase::SetVideoEncoderParam called\n");
+    OMX_LOGV("OMXVideoEncoderBase::SetVideoEncoderParam called\n");
 
     port_in = static_cast<PortVideo *>(ports[INPORT_INDEX]);
     paramPortDefinitionInput = port_in->GetPortDefinition();
@@ -306,9 +306,9 @@ OMX_ERRORTYPE OMXVideoEncoderBase::SetVideoEncoderParam() {
     else
         mEncoderParams->rawFormat = RAW_FORMAT_NV12;
 
-    LOGV("frameRate.frameRateDenom = %d\n", mEncoderParams->frameRate.frameRateDenom);
-    LOGV("frameRate.frameRateNum = %d\n", mEncoderParams->frameRate.frameRateNum);
-    LOGV("intraPeriod = %d\n ", mEncoderParams->intraPeriod);
+    OMX_LOGV("frameRate.frameRateDenom = %d\n", mEncoderParams->frameRate.frameRateDenom);
+    OMX_LOGV("frameRate.frameRateNum = %d\n", mEncoderParams->frameRate.frameRateNum);
+    OMX_LOGV("intraPeriod = %d\n ", mEncoderParams->intraPeriod);
     mEncoderParams->rcParams.initQP = mConfigIntelBitrate.nInitialQP;
     mEncoderParams->rcParams.minQP = mConfigIntelBitrate.nMinQP;
     mEncoderParams->rcParams.maxQP = 0;
@@ -321,14 +321,14 @@ OMX_ERRORTYPE OMXVideoEncoderBase::SetVideoEncoderParam() {
     mEncoderParams->rcParams.bitRate = mParamBitrate.nTargetBitrate;
     if ((mParamBitrate.eControlRate == OMX_Video_ControlRateConstant )|| 
             (mParamBitrate.eControlRate == OMX_Video_ControlRateConstantSkipFrames)) {
-        LOGV("%s(), eControlRate == OMX_Video_Intel_ControlRateConstant", __func__);
+        OMX_LOGV("%s(), eControlRate == OMX_Video_Intel_ControlRateConstant", __func__);
         mEncoderParams->rcMode = RATE_CONTROL_CBR;
     } else if ((mParamBitrate.eControlRate == OMX_Video_ControlRateVariable) ||
             (mParamBitrate.eControlRate == OMX_Video_ControlRateVariableSkipFrames)) {
-        LOGV("%s(), eControlRate == OMX_Video_Intel_ControlRateVariable", __func__);
+        OMX_LOGV("%s(), eControlRate == OMX_Video_Intel_ControlRateVariable", __func__);
         mEncoderParams->rcMode = RATE_CONTROL_VBR;
     } else if (mParamBitrate.eControlRate == (OMX_VIDEO_CONTROLRATETYPE)OMX_Video_Intel_ControlRateVideoConferencingMode) {
-        LOGV("%s(), eControlRate == OMX_Video_Intel_ControlRateVideoConferencingMode ", __func__);
+        OMX_LOGV("%s(), eControlRate == OMX_Video_Intel_ControlRateVideoConferencingMode ", __func__);
         mEncoderParams->rcMode = RATE_CONTROL_VCM;
         if(mConfigIntelBitrate.nMaxEncodeBitrate >0)
             mEncoderParams->rcParams.bitRate = mConfigIntelBitrate.nMaxEncodeBitrate;
@@ -340,7 +340,7 @@ OMX_ERRORTYPE OMXVideoEncoderBase::SetVideoEncoderParam() {
         } else {
             mEncoderParams->refreshType = VIDEO_ENC_NONIR;
         }
-        LOGV("refreshType = %d\n", mEncoderParams->refreshType);
+        OMX_LOGV("refreshType = %d\n", mEncoderParams->refreshType);
     } else {
         mEncoderParams->rcMode = RATE_CONTROL_NONE;
     }
@@ -382,12 +382,12 @@ OMX_ERRORTYPE OMXVideoEncoderBase:: ProcessorProcess(
     buffer_retain_t *,
     OMX_U32) {
 
-    LOGV("OMXVideoEncoderBase:: ProcessorProcess \n");
+    OMX_LOGV("OMXVideoEncoderBase:: ProcessorProcess \n");
     return OMX_ErrorNone;
 }
 
 OMX_ERRORTYPE OMXVideoEncoderBase::ProcessorFlush(OMX_U32 portIndex) {
-    LOGV("OMXVideoEncoderBase::ProcessorFlush\n");
+    OMX_LOGV("OMXVideoEncoderBase::ProcessorFlush\n");
     if (portIndex == INPORT_INDEX || portIndex == OMX_ALL) {
         this->ports[INPORT_INDEX]->ReturnAllRetainedBuffers();
         mVideoEncoder->flush();
@@ -570,7 +570,7 @@ OMX_ERRORTYPE OMXVideoEncoderBase::SetConfigIntelBitrate(OMX_PTR pStructure) {
     configBitRate.rcParams.temporalID = mConfigIntelBitrate.nTemporalID;
     retStatus = mVideoEncoder->setConfig(&configBitRate);
     if(retStatus != ENCODE_SUCCESS) {
-        LOGW("failed to set IntelBitrate");
+        OMX_LOGW("failed to set IntelBitrate");
     }
     return OMX_ErrorNone;
 }
@@ -613,12 +613,12 @@ OMX_ERRORTYPE OMXVideoEncoderBase::SetConfigIntelAIR(OMX_PTR pStructure) {
 
     retStatus = mVideoEncoder->setConfig(&configAIR);
     if(retStatus != ENCODE_SUCCESS) {
-        LOGW("Failed to set AIR config");
+        OMX_LOGW("Failed to set AIR config");
     }
 
     retStatus = mVideoEncoder->setConfig(&configIntraRefreshType);
     if(retStatus != ENCODE_SUCCESS) {
-        LOGW("Failed to set refresh config");
+        OMX_LOGW("Failed to set refresh config");
     }
     return OMX_ErrorNone;
 }
@@ -658,7 +658,7 @@ OMX_ERRORTYPE OMXVideoEncoderBase::SetParamVideoIntraRefresh(OMX_PTR pStructure)
 
         retStatus = mVideoEncoder->setConfig(&configCIR);
         if(retStatus != ENCODE_SUCCESS) {
-            LOGW("Failed to set CIR config");
+            OMX_LOGW("Failed to set CIR config");
         }
     }else{
         VideoConfigAIR configAIR;
@@ -668,14 +668,14 @@ OMX_ERRORTYPE OMXVideoEncoderBase::SetParamVideoIntraRefresh(OMX_PTR pStructure)
 
         retStatus = mVideoEncoder->setConfig(&configAIR);
         if(retStatus != ENCODE_SUCCESS) {
-            LOGW("Failed to set AIR config");
+            OMX_LOGW("Failed to set AIR config");
         }
 
     }
 
     retStatus = mVideoEncoder->setConfig(&configIntraRefreshType);
     if(retStatus != ENCODE_SUCCESS) {
-        LOGW("Failed to set refresh config");
+        OMX_LOGW("Failed to set refresh config");
     }
 
     return OMX_ErrorNone;
@@ -714,13 +714,13 @@ OMX_ERRORTYPE OMXVideoEncoderBase::SetConfigVideoFramerate(OMX_PTR pStructure) {
     framerate.frameRate.frameRateNum = mConfigFramerate.xEncodeFramerate >> 16;
     retStatus = mVideoEncoder->setConfig(&framerate);
     if(retStatus != ENCODE_SUCCESS) {
-        LOGW("Failed to set frame rate config");
+        OMX_LOGW("Failed to set frame rate config");
     }
     return OMX_ErrorNone;
 }
 
 OMX_ERRORTYPE OMXVideoEncoderBase::GetConfigVideoIntraVOPRefresh(OMX_PTR) {
-    LOGW("GetConfigVideoIntraVOPRefresh is not supported.");
+    OMX_LOGW("GetConfigVideoIntraVOPRefresh is not supported.");
     return OMX_ErrorUnsupportedSetting;
 }
 
@@ -740,7 +740,7 @@ OMX_ERRORTYPE OMXVideoEncoderBase::SetConfigVideoIntraVOPRefresh(OMX_PTR pStruct
         configIDRRequest.type = VideoConfigTypeIDRRequest;
         retStatus = mVideoEncoder->setConfig(&configIDRRequest);
         if(retStatus != ENCODE_SUCCESS) {
-            LOGW("Failed to set refresh config");
+            OMX_LOGW("Failed to set refresh config");
         }
     }
 
@@ -794,7 +794,7 @@ OMX_ERRORTYPE OMXVideoEncoderBase::GetParamVideoProfileLevelQuerySupported(OMX_P
 }
 
 OMX_ERRORTYPE OMXVideoEncoderBase::SetParamVideoProfileLevelQuerySupported(OMX_PTR pStructure) {
-    LOGW("SetParamVideoProfileLevelQuerySupported is not supported.");
+    OMX_LOGW("SetParamVideoProfileLevelQuerySupported is not supported.");
     return OMX_ErrorUnsupportedSetting;
 }
 */
@@ -819,7 +819,7 @@ OMX_ERRORTYPE OMXVideoEncoderBase::SetStoreMetaDataInBuffers(OMX_PTR pStructure)
     CHECK_TYPE_HEADER(p);
     CHECK_PORT_INDEX(p, INPORT_INDEX);
 
-    LOGD("SetStoreMetaDataInBuffers (enabled = %x)", p->bStoreMetaData);
+    OMX_LOGD("SetStoreMetaDataInBuffers (enabled = %x)", p->bStoreMetaData);
     if(mStoreMetaDataInBuffers == p->bStoreMetaData)
         return OMX_ErrorNone;
 
@@ -846,7 +846,7 @@ OMX_ERRORTYPE OMXVideoEncoderBase::SetStoreMetaDataInBuffers(OMX_PTR pStructure)
         port->SetPortDefinition(paramPortDefinitionInput_get, true);
     }
 
-    LOGD("SetStoreMetaDataInBuffers success");
+    OMX_LOGD("SetStoreMetaDataInBuffers success");
     return OMX_ErrorNone;
 };
 
@@ -863,7 +863,7 @@ OMX_ERRORTYPE OMXVideoEncoderBase::SetSyncEncoding(OMX_PTR pStructure) {
 
     mSyncEncoding = *(static_cast<OMX_BOOL*>(pStructure));
 
-    LOGD("SetSyncEncoding %d", mSyncEncoding);
+    OMX_LOGD("SetSyncEncoding %d", mSyncEncoding);
 
     return OMX_ErrorNone;
 };
@@ -873,7 +873,7 @@ OMX_ERRORTYPE OMXVideoEncoderBase::GetPrependSPSPPS(OMX_PTR) {
 };
 
 OMX_ERRORTYPE OMXVideoEncoderBase::SetPrependSPSPPS(OMX_PTR) {
-    LOGD("SetPrependSPSPPS success");
+    OMX_LOGD("SetPrependSPSPPS success");
     return OMX_ErrorNone;
 };
 
@@ -976,7 +976,7 @@ OMX_ERRORTYPE OMXVideoEncoderBase::SetConfigVideoBitrate(OMX_PTR pStructure){
     configBitRate.rcParams.temporalID = 0;
     retStatus = mVideoEncoder->setConfig(&configBitRate);
     if(retStatus != ENCODE_SUCCESS) {
-        LOGW("failed to set IntelBitrate");
+        OMX_LOGW("failed to set IntelBitrate");
     }
     return OMX_ErrorNone;
 }
@@ -1024,7 +1024,7 @@ OMX_ERRORTYPE OMXVideoEncoderBase::SetConfigAndroidIntraRefresh(OMX_PTR pStructu
         if (intraRefresh.nPortIndex < nr_ports) {
             memcpy(&def, ports[intraRefresh.nPortIndex]->GetPortDefinition(),sizeof(def));
         } else {
-            LOGW("Failed tp set AIR config, bad port index");
+            OMX_LOGW("Failed tp set AIR config, bad port index");
             return OMX_ErrorBadPortIndex;
         }
 

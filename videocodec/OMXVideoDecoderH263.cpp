@@ -17,7 +17,7 @@
 
 // #define LOG_NDEBUG 0
 #define LOG_TAG "OMXVideoDecoder"
-#include <wrs_omxil_core/log.h>
+#include <log.h>
 #include "OMXVideoDecoderH263.h"
 
 // Be sure to have an equal string in VideoDecoderHost.cpp (libmix)

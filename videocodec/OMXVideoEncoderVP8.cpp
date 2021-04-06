@@ -5,7 +5,7 @@
 static const char *VP8_MIME_TYPE = "video/x-vnd.on2.vp8";
 
 OMXVideoEncoderVP8::OMXVideoEncoderVP8() {
-    LOGV("OMXVideoEncoderVP8 is constructed.");
+    OMX_LOGV("OMXVideoEncoderVP8 is constructed.");
     mLastTimestamp = 0x7FFFFFFFFFFFFFFFLL;
     BuildHandlerList();
     mVideoEncoder = createVideoEncoder(VP8_MIME_TYPE);
@@ -13,7 +13,7 @@ OMXVideoEncoderVP8::OMXVideoEncoderVP8() {
 }
 
 OMXVideoEncoderVP8::~OMXVideoEncoderVP8() {
-    LOGV("OMXVideoEncoderVP8 is destructed.");
+    OMX_LOGV("OMXVideoEncoderVP8 is destructed.");
 }
 
 OMX_ERRORTYPE OMXVideoEncoderVP8::InitOutputPortFormatSpecific(OMX_PARAM_PORTDEFINITIONTYPE *paramPortDefinitionOutput) {
@@ -86,12 +86,12 @@ OMX_ERRORTYPE OMXVideoEncoderVP8::ProcessorProcess(OMX_BUFFERHEADERTYPE **buffer
     OMX_U32 frameDuration;
     OMX_U32 this_fps;
     if(buffers[INPORT_INDEX]->nFlags & OMX_BUFFERFLAG_EOS) {
-        LOGV("%s(),%d: got OMX_BUFFERFLAG_EOS\n", __func__, __LINE__);
+        OMX_LOGV("%s(),%d: got OMX_BUFFERFLAG_EOS\n", __func__, __LINE__);
         outflags |= OMX_BUFFERFLAG_EOS;
     }
 
     if (!buffers[INPORT_INDEX]->nFilledLen) {
-        LOGV("%s(),%d: input buffer's nFilledLen is zero\n",  __func__, __LINE__);
+        OMX_LOGV("%s(),%d: input buffer's nFilledLen is zero\n",  __func__, __LINE__);
         goto out;
     }
 
@@ -118,7 +118,7 @@ OMX_ERRORTYPE OMXVideoEncoderVP8::ProcessorProcess(OMX_BUFFERHEADERTYPE **buffer
         framerate.frameRate.frameRateNum = mConfigFramerate.xEncodeFramerate;
         ret = mVideoEncoder->setConfig(&framerate);
         if(ret != ENCODE_SUCCESS) {
-               LOGW("Failed to set frame rate config");
+               OMX_LOGW("Failed to set frame rate config");
         }
     }
     outBuf.data =
@@ -155,7 +155,7 @@ OMX_ERRORTYPE OMXVideoEncoderVP8::ProcessorProcess(OMX_BUFFERHEADERTYPE **buffer
             goto out;
         }
 
-        LOGV("VP8 encode output data size = %d", outBuf.dataSize);
+        OMX_LOGV("VP8 encode output data size = %d", outBuf.dataSize);
 
 
         outfilledlen = outBuf.dataSize;
@@ -166,7 +166,7 @@ OMX_ERRORTYPE OMXVideoEncoderVP8::ProcessorProcess(OMX_BUFFERHEADERTYPE **buffer
         }
 
         if (outBuf.flag & ENCODE_BUFFERFLAG_ENDOFFRAME) {
-            LOGV("Get buffer done\n");
+            OMX_LOGV("Get buffer done\n");
             outflags |= OMX_BUFFERFLAG_ENDOFFRAME;
             mFrameRetrieved = OMX_TRUE;
             if (mSyncEncoding)
@@ -208,7 +208,7 @@ OMX_ERRORTYPE OMXVideoEncoderVP8::ProcessorProcess(OMX_BUFFERHEADERTYPE **buffer
         average_fps = (current_fps + lastFps) / 2;
         lastFps = current_fps;
 
-        LOGV("FPS = %2.1f\n", average_fps);
+        OMX_LOGV("FPS = %2.1f\n", average_fps);
     }
 #endif
 
@@ -291,7 +291,7 @@ OMX_ERRORTYPE OMXVideoEncoderVP8::SetConfigVideoVp8ReferenceFrame(OMX_PTR pStruc
 
     retStatus = mVideoEncoder->setConfig(&configVP8ReferenceFrame);
     if(retStatus != ENCODE_SUCCESS) {
-        LOGW("Failed to set reference frame");
+        OMX_LOGW("Failed to set reference frame");
     }
     return OMX_ErrorNone;
 }
@@ -315,7 +315,7 @@ OMX_ERRORTYPE OMXVideoEncoderVP8::SetConfigVp8MaxFrameSizeRatio(OMX_PTR pStructu
 
     retStatus = mVideoEncoder->setConfig(&configVP8MaxFrameSizeRatio);
     if(retStatus != ENCODE_SUCCESS) {
-        LOGW("Failed to set vp8 max frame size ratio");
+        OMX_LOGW("Failed to set vp8 max frame size ratio");
     }
 
     return OMX_ErrorNone;

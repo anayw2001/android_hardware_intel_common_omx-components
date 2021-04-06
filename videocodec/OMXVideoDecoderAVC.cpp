@@ -17,7 +17,7 @@
 
 // #define LOG_NDEBUG 0
 #define LOG_TAG "OMXVideoDecoder"
-#include <wrs_omxil_core/log.h>
+#include <log.h>
 #include "OMXVideoDecoderAVC.h"
 
 
